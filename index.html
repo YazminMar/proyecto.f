@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CerealGenius - Tienda & Mayoreo</title>
+
+    <!-- Google Font: Creator Genius (Oswald/Bangers estilo cómic/creativo) & Leaflet CSS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <style>
+        :root {
+            --color-rojo: #E63946;
+            --color-naranja: #FF6B35;
+            --color-amarillo: #FFD166;
+            --color-azul: #118AB2;
+            --color-negro: #1D3557;
+            --color-oscuro: #000000;
+            --color-blanco: #FFFFFF;
+            --font-principal: 'Luckiest Guy', 'Creator Genius', cursive, sans-serif;
+            --font-secundaria: 'Outfit', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-secundaria);
+        }
+
+        body {
+            background-color: #f7f9fc;
+            color: var(--color-negro);
+            padding-bottom: 40px;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--color-rojo), var(--color-naranja));
+            color: var(--color-amarillo);
+            padding: 20px;
+            text-align: center;
+            border-bottom: 6px solid var(--color-negro);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        header h1 {
+            font-family: var(--font-principal);
+            font-size: 2.8rem;
+            letter-spacing: 2px;
+            text-shadow: 3px 3px 0 var(--color-negro);
+        }
+
+        /* Step Navigation Bar */
+        .nav-steps {
+            display: flex;
+            justify-content: center;
+            background: var(--color-negro);
+            padding: 10px;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .step-btn {
+            background: transparent;
+            border: 2px solid var(--color-amarillo);
+            color: var(--color-amarillo);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .step-btn.active {
+            background: var(--color-amarillo);
+            color: var(--color-negro);
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .interface {
+            display: none;
+            background: var(--color-blanco);
+            border-radius: 15px;
+            border: 4px solid var(--color-negro);
+            padding: 25px;
+            box-shadow: 8px 8px 0 var(--color-negro);
+        }
+
+        .interface.active {
+            display: block;
+        }
+
+        /* Headings */
+        h2 {
+            font-family: var(--font-principal);
+            color: var(--color-rojo);
+            font-size: 2rem;
+            margin-bottom: 20px;
+            border-bottom: 3px solid var(--color-amarillo);
+            padding-bottom: 5px;
+        }
+
+        /* Banner de Promoción */
+        .promo-banner {
+            background: var(--color-amarillo);
+            border: 3px dashed var(--color-rojo);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            font-weight: bold;
+            color: var(--color-oscuro);
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .promo-banner span {
+            color: var(--color-rojo);
+            font-size: 1.1rem;
+        }
+
+        .btn-audio {
+            background: var(--color-rojo);
+            color: var(--color-amarillo);
+            border: 2px solid var(--color-negro);
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            box-shadow: 2px 2px 0 var(--color-negro);
+            transition: transform 0.1s;
+        }
+
+        .btn-audio:active {
+            transform: scale(0.95);
+        }
+
+        /* Funcionalidad Extra 1: Cámara Escáner Box */
+        .scanner-box {
+            background: #eef9ff;
+            border: 3px solid var(--color-azul);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .scanner-box h3 {
+            color: var(--color-azul);
+            font-family: var(--font-principal);
+            margin-bottom: 8px;
+        }
+
+        #interactive.viewport {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            height: 220px;
+            margin: 10px auto;
+            border: 3px dashed var(--color-azul);
+            border-radius: 8px;
+            overflow: hidden;
+            display: none;
+            background: #000;
+        }
+
+        #interactive.viewport video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Grilla de Productos */
+        .grid-products {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            border: 3px solid var(--color-negro);
+            border-radius: 12px;
+            padding: 20px;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-tag {
+            position: absolute;
+            top: 10px;
+            right: -30px;
+            background: var(--color-azul);
+            color: #fff;
+            padding: 5px 30px;
+            transform: rotate(25deg);
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .card h3 {
+            font-family: var(--font-principal);
+            color: var(--color-azul);
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .size-badge {
+            display: inline-block;
+            background: var(--color-amarillo);
+            color: var(--color-negro);
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-bottom: 12px;
+            width: fit-content;
+        }
+
+        .price-list {
+            margin: 15px 0;
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 8px;
+            border-left: 4px solid var(--color-naranja);
+        }
+
+        .price-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .price-item.highlight {
+            color: var(--color-rojo);
+            font-weight: bold;
+        }
+
+        .add-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .btn {
+            background: var(--color-naranja);
+            color: var(--color-blanco);
+            border: 2px solid var(--color-negro);
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1rem;
+            box-shadow: 3px 3px 0 var(--color-negro);
+            transition: all 0.1s ease;
+        }
+
+        .btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: 1px 1px 0 var(--color-negro);
+        }
+
+        .btn-azul { background: var(--color-azul); }
+        .btn-rojo { background: var(--color-rojo); }
+        .btn-amarillo { background: var(--color-amarillo); color: var(--color-negro); }
+
+        /* Sugerencias (Leches) */
+        .sugerencias-container {
+            margin-top: 30px;
+            border-top: 2px dashed #ccc;
+            padding-top: 20px;
+        }
+
+        .grid-sugerencias {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+        }
+
+        /* Resumen & Recuadro IVA */
+        .cart-summary {
+            background: var(--color-negro);
+            color: var(--color-blanco);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 25px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .summary-row.total-final {
+            font-size: 1.5rem;
+            color: var(--color-amarillo);
+            font-family: var(--font-principal);
+            border-top: 1px solid #444;
+            padding-top: 10px;
+        }
+
+        .savings-box {
+            background: var(--color-rojo);
+            color: var(--color-amarillo);
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-top: 15px;
+            border: 2px dashed var(--color-amarillo);
+        }
+
+        /* Checkout Forms & Map */
+        .checkout-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        @media(max-width: 768px) {
+            .checkout-grid { grid-template-columns: 1fr; }
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid var(--color-negro);
+            border-radius: 6px;
+        }
+
+        #map {
+            height: 250px;
+            border: 3px solid var(--color-negro);
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .payment-methods {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        /* Barcode OXXO */
+        .oxxo-box {
+            background: #fff;
+            border: 3px solid var(--color-rojo);
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+
+        .barcode {
+            font-family: 'Libre Barcode 128', monospace, sans-serif;
+            font-size: 48px;
+            letter-spacing: 5px;
+            margin: 15px 0;
+            background: #eee;
+            padding: 10px;
+        }
+
+        /* Ticket Final */
+        .ticket {
+            background: #fffbe6;
+            border: 2px dashed var(--color-negro);
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 25px;
+            font-family: 'Courier New', Courier, monospace;
+            box-shadow: 5px 5px 0 rgba(0,0,0,0.1);
+        }
+
+        .ticket h3 {
+            font-family: var(--font-principal);
+            text-align: center;
+            color: var(--color-negro);
+        }
+
+        .ticket-line {
+            display: flex;
+            justify-content: space-between;
+            margin: 5px 0;
+        }
+
+        .ticket-divider {
+            border-bottom: 1px dashed #000;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>CEREAL GENIUS</h1>
+        <p style="font-family: var(--font-principal); font-size: 1.2rem;">¡Sabor, mayoreo y nutrición al instante!</p>
+    </header>
+
+    <div class="nav-steps">
+        <button class="step-btn active" id="btn-step-1" onclick="showInterface(1)">1. Catálogo</button>
+        <button class="step-btn" id="btn-step-2" onclick="showInterface(2)">2. Carrito & Complementos</button>
+        <button class="step-btn" id="btn-step-3" onclick="showInterface(3)">3. Envío & Pago</button>
+        <button class="step-btn" id="btn-step-4" onclick="showInterface(4)">4. Ticket Confirmación</button>
+    </div>
+
+    <div class="container">
+
+        <!-- INTERFAZ 1: SELECCIÓN DE PRODUCTOS -->
+        <div id="interface-1" class="interface active">
+            <h2>Selecciona tus Cereales</h2>
+            
+            <div class="promo-banner">
+                <div>
+                    🎉 <span id="promo-text">¡OFERTA MAYOREO ESPECIAL! $7.00 de descuento directo por cada cereal al acumular 12 o más piezas (combinado entre cualquier marca).</span>
+                </div>
+                <button class="btn-audio" onclick="speakPromoText()">
+                    🔊 Escuchar Oferta
+                </button>
+            </div>
+
+            <!-- EXTRA 1: Escáner de Cámara / Código de Barras -->
+            <div class="scanner-box">
+                <h3>📷 TECNOLOGÍA EXTRA 1: Escáner Inteligente de Cereal</h3>
+                <p style="font-size: 0.85rem; margin-bottom: 10px;">Escanea el código de barras de la caja con la cámara de tu dispositivo para añadirlo directamente al carrito.</p>
+                <button class="btn btn-azul" onclick="toggleCameraScanner()">📷 Activar Cámara Escáner</button>
+                <div id="interactive" class="viewport"></div>
+                <p id="scanner-result" style="margin-top: 5px; font-weight: bold; color: var(--color-rojo);"></p>
+            </div>
+
+            <div class="grid-products" id="products-grid">
+                <!-- Se genera dinámicamente con JS -->
+            </div>
+        </div>
+
+        <!-- INTERFAZ 2: CARRITO, SUGERENCIAS & TOTALES -->
+        <div id="interface-2" class="interface">
+            <h2>Resumen de Productos</h2>
+
+            <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+                <thead>
+                    <tr style="border-bottom: 2px solid var(--color-negro); text-align: left;">
+                        <th style="padding: 8px;">Producto</th>
+                        <th style="padding: 8px;">Cant.</th>
+                        <th style="padding: 8px;">Precio Unid.</th>
+                        <th style="padding: 8px;">Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody id="cart-table-body">
+                    <!-- Dinámico -->
+                </tbody>
+            </table>
+
+            <!-- Sugerencias (Leches y Yoghurt) -->
+            <div class="sugerencias-container">
+                <h3>Añade un complementos sugerido:</h3>
+                <p style="font-size: 0.9rem; margin-bottom: 15px;">Acompaña tu cereal con las mejores opciones de leche y bebidas:</p>
+                <div class="grid-sugerencias" id="sugerencias-grid">
+                    <!-- Dinámico -->
+                </div>
+            </div>
+
+            <!-- Recuadro Total + IVA + Ahorro -->
+            <div class="cart-summary">
+                <div class="summary-row">
+                    <span>Subtotal Productos:</span>
+                    <span id="summary-subtotal">$0.00</span>
+                </div>
+                <div class="summary-row">
+                    <span>IVA (16%):</span>
+                    <span id="summary-iva">$0.00</span>
+                </div>
+                <div class="summary-row total-final">
+                    <span>TOTAL PARCIAL:</span>
+                    <span id="summary-total">$0.00</span>
+                </div>
+
+                <div class="savings-box" id="savings-box">
+                    ¡Ahorro total en esta compra: $0.00!
+                </div>
+            </div>
+
+            <div style="margin-top: 20px; text-align: right;">
+                <button class="btn btn-naranja" onclick="showInterface(3)">Proceder al Pago y Envío ➔</button>
+            </div>
+        </div>
+
+        <!-- INTERFAZ 3: COMPLETAR DATOS / MAPA / OXXO -->
+        <div id="interface-3" class="interface">
+            <h2>Datos de Envío y Método de Pago</h2>
+
+            <div class="checkout-grid">
+                <div>
+                    <h3>1. Datos del Comprador</h3>
+                    <form id="checkout-form">
+                        <div class="form-group">
+                            <label>Correo Electrónico:</label>
+                            <input type="email" id="cust-email" value="cliente@genius.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Teléfono:</label>
+                            <input type="tel" id="cust-phone" value="8112345678" required>
+                        </div>
+
+                        <h3 style="margin-top: 20px;">2. Cálculo de Envío ($10 / km)</h3>
+                        <div class="form-group">
+                            <label>Punto Origen (Vendedor):</label>
+                            <input type="text" id="origin-addr" value="Bodega Central Genius, Monterrey" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Punto Destino (Introduce tu Dirección):</label>
+                            <div style="display: flex; gap: 8px;">
+                                <input type="text" id="dest-addr" value="Av. Constitución 1000, Monterrey">
+                                <!-- EXTRA 2: Botón de Auto-Geolocalización por GPS -->
+                                <button type="button" class="btn btn-amarillo" style="white-space: nowrap; padding: 5px 10px; font-size: 0.85rem;" onclick="getUserLocation()">📍 Usar mi GPS</button>
+                            </div>
+                        </div>
+                        
+                        <p style="font-size: 0.85rem; color: #555;">Presiona en el mapa para ajustar la entrega:</p>
+                        <div id="map"></div>
+                        <p style="margin-top: 8px; font-weight: bold;">Distancia aprox: <span id="dist-km">5.2</span> km | Costo Envío: <span id="dist-cost">$52.00</span></p>
+                    </form>
+                </div>
+
+                <div>
+                    <h3>3. Selección de Método de Pago</h3>
+                    <div class="payment-methods">
+                        <button class="btn btn-amarillo" style="flex:1;" onclick="setPayment('card')">💳 Tarjeta</button>
+                        <button class="btn btn-rojo" style="flex:1;" onclick="setPayment('oxxo')">🏪 Pago OXXO</button>
+                    </div>
+
+                    <!-- Pago Tarjeta -->
+                    <div id="payment-card-box">
+                        <div class="form-group">
+                            <label>Número de Tarjeta:</label>
+                            <input type="text" placeholder="4500 •••• •••• 8899" maxlength="16">
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <div class="form-group" style="flex: 1;">
+                                <label>Expiración:</label>
+                                <input type="text" placeholder="MM/AA">
+                            </div>
+                            <div class="form-group" style="flex: 1;">
+                                <label>CVV:</label>
+                                <input type="password" placeholder="123" maxlength="3">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pago OXXO -->
+                    <div id="payment-oxxo-box" class="oxxo-box" style="display: none;">
+                        <h4 style="color: var(--color-rojo); font-family: var(--font-principal);">Ficha de Pago OXXO Pay</h4>
+                        <p style="font-size: 0.85rem;">Presenta este código en caja para liquidar en efectivo.</p>
+                        <div class="barcode">||| | |||| | ||||| |||</div>
+                        <p style="font-size: 0.8rem; font-weight: bold;">8329 - 9912 - 4001 - 8829</p>
+                    </div>
+
+                    <div style="margin-top: 25px;">
+                        <button class="btn btn-rojo" style="width: 100%; font-size: 1.2rem;" onclick="confirmOrder()">Confirmar y Generar Ticket 🧾</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- INTERFAZ 4: TICKET DE CONFIRMACIÓN -->
+        <div id="interface-4" class="interface">
+            <h2>¡Compra Confirmada!</h2>
+            <p style="text-align: center; margin-bottom: 20px;">Gracias por tu compra en Cereal Genius. Aquí tienes tu comprobante:</p>
+
+            <div class="ticket" id="ticket-content">
+                <!-- Generado por JS -->
+            </div>
+
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="btn btn-azul" onclick="window.print()">Imprimir Ticket 🖨️</button>
+                <button class="btn btn-amarillo" onclick="location.reload()">Nueva Compra 🔄</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Leaflet JS & QuaggaJS para lectura de código de barras por cámara -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@ericblade/quagga2/dist/quagga.min.js"></script>
+
+    <script>
+        // Sintetizador de voz
+        function speakPromoText() {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const textToSpeak = "¡Oferta mayoreo especial! Siete pesos de descuento directo por cada cereal al acumular 12 o más piezas, combinado entre cualquier marca.";
+                const utterance = new SpeechSynthesisUtterance(textToSpeak);
+                utterance.lang = 'es-MX';
+                utterance.rate = 0.95;
+                window.speechSynthesis.speak(utterance);
+            } else {
+                alert("Tu navegador no soporta sintetización de voz.");
+            }
+        }
+
+        // Datos de Cereales
+        const products = [
+            {
+                id: 'c1',
+                barcode: '75010001',
+                name: 'Choco Genius Crunch',
+                size: 'Familiar (750g)',
+                pSingle: 79.99,
+                pPair: 149.99,
+                pWholesale: 62.99
+            },
+            {
+                id: 'c2',
+                barcode: '75010002',
+                name: 'Corn Flakes Power',
+                size: 'Mediano (500g)',
+                pSingle: 49.89,
+                pPair: 89.99,
+                pWholesale: 39.99
+            },
+            {
+                id: 'c3',
+                barcode: '75010003',
+                name: 'Avena Mágica Frutal',
+                size: 'Jumbo (1000g)',
+                pSingle: 99.99,
+                pPair: 179.99,
+                pWholesale: 81.99
+            },
+            {
+                id: 'c4',
+                barcode: '75010004',
+                name: 'Fruity Loops Genius',
+                size: 'Individual (250g)',
+                pSingle: 29.99,
+                pPair: 53.99,
+                pWholesale: 21.99
+            }
+        ];
+
+        // Sugerencias de Leches
+        const sugerencias = [
+            { id: 's1', name: 'Leche de Soya', price: 34.99 },
+            { id: 's2', name: 'Leche Deslactosada', price: 28.50 },
+            { id: 's3', name: 'Leche de Nuez', price: 42.99 },
+            { id: 's4', name: 'Leche 100% Vaca', price: 26.99 },
+            { id: 's5', name: 'Leche de Almendras', price: 39.99 },
+            { id: 's6', name: 'Leche Sabor Plátano', price: 22.89 },
+            { id: 's7', name: 'Yoghurt Natural', price: 31.99 }
+        ];
+
+        let cart = {};
+        let deliveryDistance = 5.2;
+        let selectedPayment = 'card';
+        let isScannerActive = false;
+        let map, markerOrigin, markerDest;
+        const originCoords = [25.6866, -100.3161];
+
+        document.addEventListener("DOMContentLoaded", () => {
+            renderProducts();
+            renderSugerencias();
+            initMap();
+            updateCartUI();
+        });
+
+        function showInterface(stepNumber) {
+            document.querySelectorAll('.interface').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.step-btn').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById(`interface-${stepNumber}`).classList.add('active');
+            document.getElementById(`btn-step-${stepNumber}`).classList.add('active');
+        }
+
+        // --- TECNOLOGÍA EXTRA 1: ESCÁNER DE CÓDIGO DE BARRAS POR CÁMARA (QuaggaJS) ---
+        function toggleCameraScanner() {
+            const viewport = document.getElementById('interactive');
+            const resultText = document.getElementById('scanner-result');
+
+            if (isScannerActive) {
+                Quagga.stop();
+                viewport.style.display = 'none';
+                isScannerActive = false;
+                resultText.innerText = "";
+            } else {
+                viewport.style.display = 'block';
+                resultText.innerText = "Apuntando cámara...";
+
+                Quagga.init({
+                    inputStream: {
+                        name: "Live",
+                        type: "LiveStream",
+                        target: document.querySelector('#interactive')
+                    },
+                    decoder: {
+                        readers: ["code_128_reader", "ean_reader", "upc_reader"]
+                    }
+                }, function(err) {
+                    if (err) {
+                        resultText.innerText = "Error o permisos denegados al acceder a la cámara.";
+                        return;
+                    }
+                    Quagga.start();
+                    isScannerActive = true;
+                });
+
+                Quagga.onDetected(function(result) {
+                    const code = result.codeResult.code;
+                    // Detecta o asigna un producto aleatorio/por coincidencia
+                    const matchedProd = products.find(p => p.barcode === code) || products[Math.floor(Math.random() * products.length)];
+                    
+                    addToCart(matchedProd.id, 1);
+                    resultText.innerText = `¡Escaneado con éxito! +1 ${matchedProd.name}`;
+                    
+                    setTimeout(() => {
+                        toggleCameraScanner();
+                    }, 1800);
+                });
+            }
+        }
+
+        // --- TECNOLOGÍA EXTRA 2: GEOLOCALIZACIÓN POR GPS (HTML5 Geolocation API) ---
+        function getUserLocation() {
+            if (navigator.geolocation) {
+                document.getElementById('dest-addr').value = "Obteniendo ubicación GPS...";
+                navigator.geolocation.getCurrentPosition((position) => {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    
+                    const userCoords = [lat, lng];
+                    markerDest.setLatLng(userCoords);
+                    map.setView(userCoords, 14);
+
+                    const dist = map.distance(originCoords, userCoords) / 1000;
+                    deliveryDistance = dist;
+
+                    document.getElementById('dest-addr').value = `Ubicación GPS (${lat.toFixed(4)}, ${lng.toFixed(4)})`;
+                    document.getElementById('dist-km').innerText = dist.toFixed(1);
+                    document.getElementById('dist-cost').innerText = `$${(dist * 10).toFixed(2)}`;
+                }, () => {
+                    alert("No se pudo obtener el acceso al GPS de tu dispositivo.");
+                    document.getElementById('dest-addr').value = "Av. Constitución 1000, Monterrey";
+                });
+            } else {
+                alert("Tu navegador no soporta geolocalización.");
+            }
+        }
+
+        function renderProducts() {
+            const grid = document.getElementById('products-grid');
+            grid.innerHTML = products.map(p => `
+                <div class="card">
+                    <div class="card-tag">¡Sabor Top!</div>
+                    <div>
+                        <h3>${p.name}</h3>
+                        <span class="size-badge">Tamaño: ${p.size}</span>
+                        
+                        <div class="price-list">
+                            <div class="price-item"><span>1 Pieza:</span> <strong>$${p.pSingle.toFixed(2)}</strong></div>
+                            <div class="price-item"><span>Par (2 pcs):</span> <strong>$${p.pPair.toFixed(2)}</strong></div>
+                            <div class="price-item highlight"><span>Mayoreo (>12 tot):</span> <strong>$${p.pWholesale.toFixed(2)}</strong></div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="add-controls">
+                            <button class="btn btn-azul" style="flex:1;" onclick="addToCart('${p.id}', 1)">+1 Pza</button>
+                            <button class="btn btn-amarillo" style="flex:1;" onclick="addToCart('${p.id}', 2)">+1 Par</button>
+                            <button class="btn btn-rojo" style="flex:1;" onclick="addToCart('${p.id}', 12)">+12 (Mayoreo)</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderSugerencias() {
+            const grid = document.getElementById('sugerencias-grid');
+            grid.innerHTML = sugerencias.map(s => `
+                <div style="border: 2px solid var(--color-negro); padding: 10px; border-radius: 8px; background: #fff; text-align: center;">
+                    <strong style="display:block; font-size: 0.95rem;">${s.name}</strong>
+                    <span style="color: var(--color-rojo); font-weight: bold;">$${s.price.toFixed(2)}</span>
+                    <button class="btn btn-amarillo" style="padding: 4px 8px; font-size: 0.8rem; margin-top: 5px; width: 100%;" onclick="addSugerenciaToCart('${s.id}')">+ Agregar</button>
+                </div>
+            `).join('');
+        }
+
+        function addToCart(productId, qty) {
+            if (!cart[productId]) cart[productId] = 0;
+            cart[productId] += qty;
+            updateCartUI();
+        }
+
+        function addSugerenciaToCart(sugId) {
+            if (!cart[sugId]) cart[sugId] = 0;
+            cart[sugId] += 1;
+            updateCartUI();
+        }
+
+        function calculateTotals() {
+            let subtotalRaw = 0;
+            let totalCerealUnits = 0;
+            let normalSubtotal = 0;
+
+            products.forEach(p => {
+                if (cart[p.id]) {
+                    totalCerealUnits += cart[p.id];
+                }
+            });
+
+            const isWholesaleQualified = totalCerealUnits >= 12;
+
+            for (let id in cart) {
+                const qty = cart[id];
+                const product = products.find(p => p.id === id);
+                const sug = sugerencias.find(s => s.id === id);
+
+                if (product) {
+                    normalSubtotal += product.pSingle * qty;
+
+                    if (isWholesaleQualified) {
+                        subtotalRaw += product.pWholesale * qty;
+                    } else {
+                        const pairs = Math.floor(qty / 2);
+                        const singles = qty % 2;
+                        subtotalRaw += (pairs * product.pPair) + (singles * product.pSingle);
+                    }
+                } else if (sug) {
+                    normalSubtotal += sug.price * qty;
+                    subtotalRaw += sug.price * qty;
+                }
+            }
+
+            let specialWholesaleBonus = isWholesaleQualified ? (totalCerealUnits * 7) : 0;
+            let finalSubtotal = Math.max(0, subtotalRaw - specialWholesaleBonus);
+            let iva = finalSubtotal * 0.16;
+            let totalWithIVA = finalSubtotal + iva;
+            let savings = Math.max(0, normalSubtotal - finalSubtotal);
+
+            return {
+                subtotal: finalSubtotal,
+                iva: iva,
+                total: totalWithIVA,
+                savings: savings,
+                cerealUnits: totalCerealUnits,
+                isWholesale: isWholesaleQualified
+            };
+        }
+
+        function updateCartUI() {
+            const tbody = document.getElementById('cart-table-body');
+            tbody.innerHTML = '';
+
+            for (let id in cart) {
+                const qty = cart[id];
+                if (qty <= 0) continue;
+
+                const product = products.find(p => p.id === id);
+                const sug = sugerencias.find(s => s.id === id);
+
+                const itemData = product || sug;
+                const unitPrice = product ? product.pSingle : sug.price;
+
+                tbody.innerHTML += `
+                    <tr style="border-bottom: 1px solid #eee;">
+                        <td style="padding: 8px;"><strong>${itemData.name}</strong></td>
+                        <td style="padding: 8px;">
+                            <button onclick="changeQty('${id}', -1)" style="padding: 2px 6px;">-</button>
+                            ${qty}
+                            <button onclick="changeQty('${id}', 1)" style="padding: 2px 6px;">+</button>
+                        </td>
+                        <td style="padding: 8px;">$${unitPrice.toFixed(2)}</td>
+                        <td style="padding: 8px;">$${(unitPrice * qty).toFixed(2)}</td>
+                    </tr>
+                `;
+            }
+
+            const totals = calculateTotals();
+            document.getElementById('summary-subtotal').innerText = `$${totals.subtotal.toFixed(2)}`;
+            document.getElementById('summary-iva').innerText = `$${totals.iva.toFixed(2)}`;
+            document.getElementById('summary-total').innerText = `$${totals.total.toFixed(2)}`;
+            
+            document.getElementById('savings-box').innerText = 
+                `¡Ahorro acumulado en esta compra: $${totals.savings.toFixed(2)}!` + 
+                (totals.isWholesale ? " (¡Descuento de $7/pieza aplicado por mayoreo!)" : "");
+        }
+
+        function changeQty(id, delta) {
+            cart[id] += delta;
+            if (cart[id] <= 0) delete cart[id];
+            updateCartUI();
+        }
+
+        function initMap() {
+            map = L.map('map').setView(originCoords, 12);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            markerOrigin = L.marker(originCoords).addTo(map).bindPopup('Origen: Bodega Vendedor').openPopup();
+            markerDest = L.marker([25.6500, -100.2900]).addTo(map).bindPopup('Destino Comprador');
+
+            map.on('click', function(e) {
+                markerDest.setLatLng(e.latlng);
+                const dist = map.distance(originCoords, e.latlng) / 1000; 
+                deliveryDistance = dist;
+                document.getElementById('dist-km').innerText = dist.toFixed(1);
+                document.getElementById('dist-cost').innerText = `$${(dist * 10).toFixed(2)}`;
+            });
+        }
+
+        function setPayment(type) {
+            selectedPayment = type;
+            document.getElementById('payment-card-box').style.display = type === 'card' ? 'block' : 'none';
+            document.getElementById('payment-oxxo-box').style.display = type === 'oxxo' ? 'block' : 'none';
+        }
+
+        function confirmOrder() {
+            const totals = calculateTotals();
+            const shippingCost = deliveryDistance * 10;
+            const grandTotal = totals.total + shippingCost;
+            
+            const email = document.getElementById('cust-email').value;
+            const phone = document.getElementById('cust-phone').value;
+            const dest = document.getElementById('dest-addr').value;
+
+            let itemsHTML = '';
+            for (let id in cart) {
+                const item = products.find(p => p.id === id) || sugerencias.find(s => s.id === id);
+                itemsHTML += `
+                    <div class="ticket-line">
+                        <span>${cart[id]}x ${item.name}</span>
+                        <span>$${((item.pSingle || item.price) * cart[id]).toFixed(2)}</span>
+                    </div>
+                `;
+            }
+
+            const ticketHTML = `
+                <h3>CEREAL GENIUS STORES</h3>
+                <p style="text-align:center; font-size:0.8rem;">RFC: CGE-260726-HA1</p>
+                <div class="ticket-divider"></div>
+                
+                <p><strong>VENDEDOR:</strong> Bodega Central Genius</p>
+                <p><strong>COMPRADOR:</strong> ${email}</p>
+                <p><strong>TEL:</strong> ${phone}</p>
+                <p><strong>DESTINO:</strong> ${dest}</p>
+                
+                <div class="ticket-divider"></div>
+                <strong>DETALLE DE COMPRA:</strong>
+                ${itemsHTML}
+                
+                <div class="ticket-divider"></div>
+                <div class="ticket-line"><span>Subtotal Prod:</span><span>$${totals.subtotal.toFixed(2)}</span></div>
+                <div class="ticket-line"><span>IVA (16%):</span><span>$${totals.iva.toFixed(2)}</span></div>
+                <div class="ticket-line"><span>Envío (${deliveryDistance.toFixed(1)} km):</span><span>$${shippingCost.toFixed(2)}</span></div>
+                <div class="ticket-divider"></div>
+                <div class="ticket-line" style="font-size:1.2rem; font-weight:bold;">
+                    <span>TOTAL PAGADO:</span><span>$${grandTotal.toFixed(2)}</span>
+                </div>
+                <div class="ticket-divider"></div>
+                <p style="text-align:center; color: var(--color-rojo); font-weight:bold;">
+                    AHORRO TOTAL EN COMPRA: $${totals.savings.toFixed(2)}
+                </p>
+                <div class="ticket-divider"></div>
+                <p style="text-align:center; font-size: 0.8rem;">Pago realizado mediante: ${selectedPayment.toUpperCase()}</p>
+                <p style="text-align:center; font-size: 0.8rem; margin-top: 5px;">¡Gracias por preferir Creator Genius!</p>
+            `;
+
+            document.getElementById('ticket-content').innerHTML = ticketHTML;
+            showInterface(4);
+        }
+    </script>
+</body>
+</html>
