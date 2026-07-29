@@ -8,66 +8,86 @@
     <!-- Google Fonts & Leaflet CSS -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
     <style>
         :root {
-            /* PALETA DE COLORES CEREAL GENIUS (BRANDING REFINADO) */
-            --brand-blue: #0d3b66;       /* Azul Principal de Marca */
-            --brand-dark: #082038;       /* Azul Profundo para bordes/sombras */
-            --brand-yellow: #f4d35e;     /* Amarillo Cereal / Dorado */
-            --brand-orange: #f95738;     /* Naranja Crocante / Acento */
-            --brand-cream: #faf0ca;      /* Crema Leche / Fondos destacados */
-            --brand-green: #2a9d8f;      /* Verde Fresco / Confirmaciones */
-            --color-bg: #f1f5f9;         /* Fondo General */
+            /* PALETA CORPORATIVA / PROFESIONAL */
+            --color-primary: #1e3a8a;       /* Azul Cobalto Corporativo */
+            --color-primary-hover: #1d4ed8; /* Azul Interactivo */
+            --color-accent: #2563eb;        /* Índigo de Acento */
+            --color-dark: #0f172a;          /* Slate Oscuro */
+            --color-secondary: #475569;      /* Gris Texto Secundario */
+            --color-border: #e2e8f0;         /* Borde Fino Ejecutivo */
+            --color-bg: #f8fafc;             /* Fondo Limpio */
             --color-white: #ffffff;
-            --color-text: #0d3b66;
             
-            --font-principal: 'Luckiest Guy', cursive, sans-serif;
-            --font-secundaria: 'Outfit', sans-serif;
-            --border-radius: 12px;
+            /* Acentos de Alerta / Oferta Sobrios */
+            --color-amber: #d97706;          /* Dorado/Ámbar Mayoreo */
+            --color-amber-bg: #fffbeb;       /* Fondo Ámbar Suave */
+            --color-success: #059669;        /* Verde Confirmación */
+            --color-danger: #dc2626;         /* Rojo Alerta */
+
+            /* TONOS ATENUADOS PARA BOTONES DE CANTIDAD */
+            --btn-blue-soft: #3b82f6;        /* Azul dessaturado tenue para +1 */
+            --btn-blue-soft-hover: #2563eb;
+            --btn-amber-soft: #d97706;       /* Ámbar tenue para +12 */
+            --btn-amber-soft-hover: #b45309;
+
+            --font-main: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+            --border-radius: 8px;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: var(--font-secundaria);
+            font-family: var(--font-main);
         }
 
         body {
             background-color: var(--color-bg);
-            color: var(--color-text);
-            padding-bottom: 40px;
+            color: var(--color-dark);
+            padding-bottom: 50px;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* Header */
+        /* Header Corporativo */
         header {
-            background: linear-gradient(135deg, var(--brand-blue), #164e85);
-            color: var(--brand-yellow);
-            padding: 24px 20px;
+            background-color: var(--color-dark);
+            color: var(--color-white);
+            padding: 28px 20px;
             text-align: center;
-            border-bottom: 5px solid var(--brand-dark);
+            border-bottom: 1px solid var(--color-border);
             position: sticky;
             top: 0;
             z-index: 1000;
-            box-shadow: 0 4px 20px rgba(13, 59, 102, 0.25);
+            box-shadow: var(--shadow-md);
         }
 
         header h1 {
-            font-family: var(--font-principal);
-            font-size: 3rem;
-            letter-spacing: 2px;
-            text-shadow: 3px 3px 0 var(--brand-dark);
-            margin-bottom: 4px;
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--color-white);
         }
 
-        /* Step Navigation Bar */
+        header p {
+            font-size: 0.95rem;
+            color: #94a3b8;
+            margin-top: 4px;
+            font-weight: 400;
+        }
+
+        /* Bar de Pasos */
         .nav-steps {
             display: flex;
             justify-content: center;
-            background: var(--brand-dark);
+            background: var(--color-white);
+            border-bottom: 1px solid var(--color-border);
             padding: 12px;
             gap: 12px;
             flex-wrap: wrap;
@@ -75,24 +95,26 @@
 
         .step-btn {
             background: transparent;
-            border: 2px solid var(--brand-yellow);
-            color: var(--brand-yellow);
+            border: 1px solid var(--color-border);
+            color: var(--color-secondary);
             padding: 8px 18px;
             border-radius: 20px;
+            font-size: 0.9rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
         }
 
         .step-btn.active {
-            background: var(--brand-yellow);
-            color: var(--brand-dark);
-            box-shadow: 0 0 10px rgba(244, 211, 94, 0.4);
+            background: var(--color-primary);
+            color: var(--color-white);
+            border-color: var(--color-primary);
+            box-shadow: var(--shadow-sm);
         }
 
         .container {
             max-width: 1100px;
-            margin: 30px auto;
+            margin: 35px auto;
             padding: 0 20px;
         }
 
@@ -100,82 +122,80 @@
             display: none;
             background: var(--color-white);
             border-radius: var(--border-radius);
-            border: 3px solid var(--brand-dark);
-            padding: 25px;
-            box-shadow: 6px 6px 0 var(--brand-dark);
+            border: 1px solid var(--color-border);
+            padding: 30px;
+            box-shadow: var(--shadow-md);
         }
 
         .interface.active {
             display: block;
         }
 
-        /* Headings */
+        /* Titulares */
         h2 {
-            font-family: var(--font-principal);
-            color: var(--brand-blue);
-            font-size: 2.2rem;
+            color: var(--color-dark);
+            font-size: 1.5rem;
+            font-weight: 700;
             margin-bottom: 20px;
-            border-bottom: 4px solid var(--brand-yellow);
-            padding-bottom: 6px;
-            letter-spacing: 1px;
+            border-bottom: 1px solid var(--color-border);
+            padding-bottom: 12px;
         }
 
-        /* Banner de Promoción */
+        /* Banner Promocional Sobrio */
         .promo-banner {
-            background: var(--brand-cream);
-            border: 2px dashed var(--brand-orange);
+            background: var(--color-amber-bg);
+            border: 1px solid #fde68a;
             padding: 16px;
             border-radius: var(--border-radius);
             margin-bottom: 25px;
-            font-weight: 600;
-            color: var(--brand-dark);
-            text-align: center;
+            font-size: 0.95rem;
+            color: #92400e;
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 12px;
+            justify-content: space-between;
+            gap: 15px;
             flex-wrap: wrap;
         }
 
         .promo-banner span {
-            color: var(--brand-orange);
-            font-weight: 800;
+            font-weight: 700;
+            color: var(--color-amber);
         }
 
         .btn-audio {
-            background: var(--brand-orange);
-            color: var(--color-white);
-            border: 2px solid var(--brand-dark);
+            background: var(--color-white);
+            color: #92400e;
+            border: 1px solid #fcd34d;
             padding: 8px 14px;
-            border-radius: 20px;
+            border-radius: 6px;
             cursor: pointer;
-            font-weight: bold;
+            font-weight: 600;
+            font-size: 0.85rem;
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            box-shadow: 2px 2px 0 var(--brand-dark);
-            transition: transform 0.1s;
+            transition: background-color 0.2s;
         }
 
-        .btn-audio:active {
-            transform: scale(0.95);
+        .btn-audio:hover {
+            background: #fef3c7;
         }
 
-        /* Cámara Escáner Box */
+        /* Escáner Box */
         .scanner-box {
-            background: #eef5fc;
-            border: 2px solid var(--brand-blue);
+            background: #f1f5f9;
+            border: 1px solid var(--color-border);
             border-radius: var(--border-radius);
-            padding: 18px;
+            padding: 20px;
             margin-bottom: 25px;
             text-align: center;
         }
 
         .scanner-box h3 {
-            color: var(--brand-blue);
-            font-family: var(--font-principal);
-            margin-bottom: 8px;
-            font-size: 1.3rem;
+            color: var(--color-dark);
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 6px;
         }
 
         #interactive.viewport {
@@ -183,12 +203,12 @@
             width: 100%;
             max-width: 400px;
             height: 220px;
-            margin: 12px auto;
-            border: 3px dashed var(--brand-blue);
-            border-radius: 8px;
+            margin: 15px auto;
+            border: 2px dashed var(--color-primary);
+            border-radius: 6px;
             overflow: hidden;
             display: none;
-            background: var(--brand-dark);
+            background: #000;
         }
 
         #interactive.viewport video {
@@ -197,174 +217,212 @@
             object-fit: cover;
         }
 
-        /* Grilla de Productos */
+        /* Cards de Producto Profesional con Imagen */
         .grid-products {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
         }
 
         .card {
-            border: 3px solid var(--brand-dark);
+            border: 1px solid var(--color-border);
             border-radius: var(--border-radius);
-            padding: 20px;
+            padding: 16px;
             background: var(--color-white);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 4px 4px 0 var(--brand-dark);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
 
         .card:hover {
-            transform: translateY(-4px);
-            box-shadow: 6px 6px 0 var(--brand-dark);
+            border-color: #cbd5e1;
+            box-shadow: var(--shadow-md);
         }
 
-        .card-tag {
-            position: absolute;
-            top: 12px;
-            right: -30px;
-            background: var(--brand-orange);
-            color: var(--color-white);
-            padding: 4px 30px;
-            transform: rotate(25deg);
-            font-size: 0.75rem;
-            font-weight: 800;
-            letter-spacing: 1px;
-            text-transform: uppercase;
+        .product-img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 6px;
+            margin-bottom: 12px;
+            background-color: #f1f5f9;
         }
 
         .card h3 {
-            font-family: var(--font-principal);
-            color: var(--brand-blue);
-            font-size: 1.5rem;
-            margin-bottom: 6px;
+            color: var(--color-dark);
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 8px;
         }
 
-        .size-badge {
-            display: inline-block;
-            background: var(--brand-cream);
-            color: var(--brand-blue);
-            border: 1px solid var(--brand-yellow);
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 0.85rem;
+        .size-select-label {
+            font-size: 0.8rem;
             font-weight: 600;
+            color: var(--color-secondary);
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        .size-select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--color-border);
+            border-radius: 6px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            background-color: #f8fafc;
+            color: var(--color-dark);
             margin-bottom: 12px;
-            width: fit-content;
+            cursor: pointer;
+            outline: none;
         }
 
         .price-list {
-            margin: 15px 0;
+            margin: 10px 0 14px 0;
             background: #f8fafc;
             padding: 12px;
-            border-radius: 8px;
-            border-left: 4px solid var(--brand-yellow);
+            border-radius: 6px;
+            border: 1px solid var(--color-border);
         }
 
         .price-item {
             display: flex;
             justify-content: space-between;
-            font-size: 0.9rem;
-            margin-bottom: 6px;
+            font-size: 0.88rem;
+            color: var(--color-secondary);
+            margin-bottom: 4px;
         }
 
         .price-item.highlight {
-            color: var(--brand-orange);
-            font-weight: bold;
+            color: var(--color-amber);
+            font-weight: 700;
         }
 
         .add-controls {
             display: flex;
             gap: 6px;
-            margin-top: 10px;
         }
 
+        /* Botones Profesionales */
         .btn {
-            background: var(--brand-orange);
+            background: var(--color-primary);
             color: var(--color-white);
-            border: 2px solid var(--brand-dark);
-            padding: 10px 16px;
-            border-radius: 8px;
-            font-weight: 700;
+            border: none;
+            padding: 9px 14px;
+            border-radius: 6px;
+            font-weight: 600;
             cursor: pointer;
-            font-size: 0.95rem;
-            box-shadow: 3px 3px 0 var(--brand-dark);
-            transition: all 0.1s ease;
+            font-size: 0.88rem;
+            transition: background-color 0.15s ease, opacity 0.15s ease;
         }
 
-        .btn:active {
-            transform: translate(2px, 2px);
-            box-shadow: 1px 1px 0 var(--brand-dark);
+        .btn:hover {
+            background: var(--color-primary-hover);
         }
 
-        .btn-azul { background: var(--brand-blue); color: var(--color-white); }
-        .btn-rojo { background: var(--brand-orange); color: var(--color-white); }
-        .btn-amarillo { background: var(--brand-yellow); color: var(--brand-dark); }
-        .btn-naranja { background: var(--brand-orange); color: var(--color-white); }
+        /* Botones de acción directa con tonos suavizados */
+        .btn-qty-soft-blue {
+            background: var(--btn-blue-soft);
+            color: var(--color-white);
+        }
+        .btn-qty-soft-blue:hover {
+            background: var(--btn-blue-soft-hover);
+        }
 
-        /* Sugerencias (Leches) */
+        .btn-qty-soft-amber {
+            background: var(--btn-amber-soft);
+            color: var(--color-white);
+            opacity: 0.9;
+        }
+        .btn-qty-soft-amber:hover {
+            background: var(--btn-amber-soft-hover);
+            opacity: 1;
+        }
+
+        .btn-azul { background: var(--color-primary); }
+        .btn-rojo { background: var(--color-danger); }
+        .btn-rojo:hover { background: #b91c1c; }
+        .btn-amarillo { background: var(--color-dark); color: var(--color-white); }
+        .btn-amarillo:hover { background: #334155; }
+
+        /* Sugerencias con Imagen */
         .sugerencias-container {
             margin-top: 30px;
-            border-top: 2px dashed #cbd5e1;
+            border-top: 1px solid var(--color-border);
             padding-top: 20px;
         }
 
         .sugerencias-container h3 {
-            font-family: var(--font-principal);
-            color: var(--brand-blue);
+            font-size: 1.1rem;
+            color: var(--color-dark);
             margin-bottom: 4px;
         }
 
         .grid-sugerencias {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 12px;
         }
 
-        /* Resumen & Recuadro IVA */
+        .sug-img {
+            width: 100%;
+            height: 90px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-bottom: 8px;
+        }
+
+        /* Carrito Tabla */
+        .cart-img-thumb {
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+            border-radius: 4px;
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+
+        /* Resumen de Compra */
         .cart-summary {
-            background: var(--brand-blue);
-            color: var(--color-white);
-            padding: 22px;
+            background: #f8fafc;
+            color: var(--color-dark);
+            padding: 20px;
             border-radius: var(--border-radius);
             margin-top: 25px;
-            border: 3px solid var(--brand-dark);
-            box-shadow: 4px 4px 0 var(--brand-dark);
+            border: 1px solid var(--color-border);
         }
 
         .summary-row {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 10px;
-            font-size: 1.05rem;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+            color: var(--color-secondary);
         }
 
         .summary-row.total-final {
-            font-size: 1.6rem;
-            color: var(--brand-yellow);
-            font-family: var(--font-principal);
-            border-top: 2px dashed rgba(255,255,255,0.2);
+            font-size: 1.3rem;
+            color: var(--color-dark);
+            font-weight: 800;
+            border-top: 1px solid var(--color-border);
             padding-top: 12px;
-            margin-top: 10px;
+            margin-top: 8px;
         }
 
         .savings-box {
-            background: var(--brand-orange);
-            color: var(--color-white);
-            padding: 12px;
-            border-radius: 8px;
+            background: var(--color-amber-bg);
+            color: #92400e;
+            padding: 10px;
+            border-radius: 6px;
             text-align: center;
-            font-weight: bold;
-            font-size: 1.05rem;
-            margin-top: 15px;
-            border: 2px dashed var(--brand-yellow);
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-top: 12px;
+            border: 1px solid #fde68a;
         }
 
-        /* Checkout Forms & Map */
+        /* Formulario & Checkout */
         .checkout-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -376,46 +434,49 @@
         }
 
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 14px;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 6px;
+            margin-bottom: 5px;
             font-weight: 600;
-            color: var(--brand-blue);
+            font-size: 0.88rem;
+            color: var(--color-dark);
         }
 
         .form-group input, .form-group select {
             width: 100%;
-            padding: 10px 12px;
-            border: 2px solid var(--brand-dark);
+            padding: 10px;
+            border: 1px solid var(--color-border);
             border-radius: 6px;
+            font-size: 0.9rem;
             outline: none;
+            transition: border-color 0.2s;
         }
 
         .form-group input:focus {
-            border-color: var(--brand-blue);
-            box-shadow: 0 0 0 3px rgba(13, 59, 102, 0.15);
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
 
         #map {
-            height: 250px;
-            border: 3px solid var(--brand-dark);
+            height: 240px;
+            border: 1px solid var(--color-border);
             border-radius: var(--border-radius);
-            margin-top: 10px;
+            margin-top: 8px;
         }
 
         .payment-methods {
             display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
+            gap: 10px;
+            margin-bottom: 18px;
         }
 
-        /* Barcode OXXO */
+        /* OXXO Ficha */
         .oxxo-box {
-            background: var(--brand-cream);
-            border: 3px solid var(--brand-orange);
+            background: #fff;
+            border: 1px solid var(--color-border);
             padding: 20px;
             text-align: center;
             border-radius: var(--border-radius);
@@ -424,43 +485,42 @@
 
         .barcode {
             font-family: monospace;
-            font-size: 32px;
+            font-size: 28px;
             letter-spacing: 3px;
-            margin: 15px 0;
-            background: var(--color-white);
-            border: 1px solid #ccc;
+            margin: 12px 0;
+            background: #f1f5f9;
             padding: 10px;
             font-weight: bold;
-            color: #000;
         }
 
-        /* Ticket Final */
+        /* Ticket de Compra */
         .ticket {
-            background: var(--brand-cream);
-            border: 2px dashed var(--brand-dark);
-            max-width: 500px;
+            background: #fff;
+            border: 1px solid var(--color-border);
+            max-width: 480px;
             margin: 0 auto;
             padding: 25px;
             font-family: 'Courier New', Courier, monospace;
-            box-shadow: 6px 6px 0 rgba(0,0,0,0.1);
-            color: #111;
+            box-shadow: var(--shadow-md);
+            border-radius: 4px;
         }
 
         .ticket h3 {
-            font-family: var(--font-principal);
             text-align: center;
-            color: var(--brand-blue);
-            font-size: 1.8rem;
+            color: var(--color-dark);
+            font-size: 1.4rem;
+            margin-bottom: 4px;
         }
 
         .ticket-line {
             display: flex;
             justify-content: space-between;
-            margin: 5px 0;
+            margin: 6px 0;
+            font-size: 0.9rem;
         }
 
         .ticket-divider {
-            border-bottom: 1px dashed var(--brand-dark);
+            border-bottom: 1px dashed #cbd5e1;
             margin: 10px 0;
         }
     </style>
@@ -468,38 +528,38 @@
 <body>
 
     <header>
-        <h1>CEREAL GENIUS</h1>
-        <p style="font-family: var(--font-principal); font-size: 1.2rem; letter-spacing: 1px;">¡Sabor, mayoreo y nutrición al instante!</p>
+        <h1>CerealGenius</h1>
+        <p>Plataforma de Distribución & Venta Directa de Cereal</p>
     </header>
 
     <div class="nav-steps">
         <button class="step-btn active" id="btn-step-1" onclick="showInterface(1)">1. Catálogo</button>
         <button class="step-btn" id="btn-step-2" onclick="showInterface(2)">2. Carrito & Complementos</button>
         <button class="step-btn" id="btn-step-3" onclick="showInterface(3)">3. Envío & Pago</button>
-        <button class="step-btn" id="btn-step-4" onclick="showInterface(4)">4. Ticket Confirmación</button>
+        <button class="step-btn" id="btn-step-4" onclick="showInterface(4)">4. Confirmación</button>
     </div>
 
     <div class="container">
 
-        <!-- INTERFAZ 1: SELECCIÓN DE PRODUCTOS -->
+        <!-- INTERFAZ 1: CATÁLOGO -->
         <div id="interface-1" class="interface active">
-            <h2>Selecciona tus Cereales</h2>
+            <h2>Catálogo de Productos</h2>
             
             <div class="promo-banner">
                 <div>
-                    🎉 <span id="promo-text">¡OFERTA MAYOREO ESPECIAL! Descuento directo por cada cereal al acumular 12 o más piezas (combinado entre cualquier marca).</span>
+                    🎉 <span id="promo-text">Descuento de Mayoreo Automático:</span> Aplica precio preferencial por volumen al acumular 12 o más piezas en cualquier combinación de tamaños.
                 </div>
                 <button class="btn-audio" onclick="speakPromoText()">
-                    🔊 Escuchar Oferta
+                    🔊 Escuchar
                 </button>
             </div>
 
             <div class="scanner-box">
-                <h3>📷 Escáner Inteligente de Cereal</h3>
-                <p style="font-size: 0.9rem; margin-bottom: 12px; color: var(--brand-blue);">Escanea el código de barras de la caja con la cámara de tu dispositivo para añadirlo directamente al carrito.</p>
-                <button class="btn btn-azul" onclick="toggleCameraScanner()">📷 Activar Cámara Escáner</button>
+                <h3>Escáner de Código de Barras</h3>
+                <p style="font-size: 0.88rem; margin-bottom: 10px; color: var(--color-secondary);">Use la cámara de su dispositivo para registrar productos rápidamente.</p>
+                <button class="btn btn-azul" onclick="toggleCameraScanner()">Activar Escáner</button>
                 <div id="interactive" class="viewport"></div>
-                <p id="scanner-result" style="margin-top: 8px; font-weight: bold; color: var(--brand-orange);"></p>
+                <p id="scanner-result" style="margin-top: 8px; font-weight: 600; color: var(--color-amber);"></p>
             </div>
 
             <div class="grid-products" id="products-grid">
@@ -507,16 +567,16 @@
             </div>
         </div>
 
-        <!-- INTERFAZ 2: CARRITO, SUGERENCIAS & TOTALES -->
+        <!-- INTERFAZ 2: CARRITO -->
         <div id="interface-2" class="interface">
-            <h2>Resumen de Productos</h2>
+            <h2>Resumen del Carrito</h2>
 
             <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
                 <thead>
-                    <tr style="border-bottom: 2px solid var(--brand-dark); text-align: left; color: var(--brand-blue);">
+                    <tr style="border-bottom: 1px solid var(--color-border); text-align: left; color: var(--color-secondary); font-size: 0.9rem;">
                         <th style="padding: 10px;">Producto</th>
                         <th style="padding: 10px;">Cant.</th>
-                        <th style="padding: 10px;">Precio Unid.</th>
+                        <th style="padding: 10px;">Precio Unit.</th>
                         <th style="padding: 10px;">Subtotal</th>
                     </tr>
                 </thead>
@@ -526,8 +586,8 @@
             </table>
 
             <div class="sugerencias-container">
-                <h3>Añade un complemento sugerido:</h3>
-                <p style="font-size: 0.9rem; margin-bottom: 15px; color: #555;">Acompaña tu cereal con las mejores opciones de leche y bebidas:</p>
+                <h3>Complementos Sugeridos</h3>
+                <p style="font-size: 0.88rem; margin-bottom: 12px; color: var(--color-secondary);">Añada bebidas para complementar su orden:</p>
                 <div class="grid-sugerencias" id="sugerencias-grid">
                     <!-- Dinámico -->
                 </div>
@@ -543,76 +603,76 @@
                     <span id="summary-iva">$0.00</span>
                 </div>
                 <div class="summary-row total-final">
-                    <span>TOTAL PARCIAL:</span>
+                    <span>Total Parcial:</span>
                     <span id="summary-total">$0.00</span>
                 </div>
 
                 <div class="savings-box" id="savings-box">
-                    ¡Ahorro total en esta compra: $0.00!
+                    Ahorro acumulado: $0.00
                 </div>
             </div>
 
             <div style="margin-top: 20px; text-align: right;">
-                <button class="btn btn-naranja" onclick="showInterface(3)">Proceder al Pago y Envío ➔</button>
+                <button class="btn btn-azul" style="padding: 12px 20px; font-size: 0.95rem;" onclick="showInterface(3)">Proceder al Pago y Envío ➔</button>
             </div>
         </div>
 
-        <!-- INTERFAZ 3: COMPLETAR DATOS / MAPA / OXXO -->
+        <!-- INTERFAZ 3: ENVÍO Y PAGO -->
         <div id="interface-3" class="interface">
-            <h2>Datos de Envío y Método de Pago</h2>
+            <h2>Detalles de Envío y Pago</h2>
 
             <div class="checkout-grid">
                 <div>
-                    <h3 style="color: var(--brand-blue); margin-bottom: 10px;">1. Datos del Comprador</h3>
+                    <h3 style="font-size: 1.05rem; margin-bottom: 12px; color: var(--color-dark);">1. Datos del Cliente</h3>
                     <form id="checkout-form" onsubmit="event.preventDefault();">
                         <div class="form-group">
-                            <label>Correo Electrónico:</label>
-                            <input type="email" id="cust-email" value="cliente@genius.com" required>
+                            <label>Correo Electrónico</label>
+                            <input type="email" id="cust-email" value="cliente@empresa.com" required>
                         </div>
                         <div class="form-group">
-                            <label>Teléfono:</label>
+                            <label>Teléfono de Contacto</label>
                             <input type="tel" id="cust-phone" value="8112345678" required>
                         </div>
 
-                        <h3 style="margin-top: 20px; color: var(--brand-blue); margin-bottom: 10px;">2. Cálculo de Envío ($10 / km)</h3>
+                        <h3 style="font-size: 1.05rem; margin-top: 20px; margin-bottom: 12px; color: var(--color-dark);">2. Dirección de Entrega ($10 / km)</h3>
                         <div class="form-group">
-                            <label>Punto Origen (Vendedor):</label>
-                            <input type="text" id="origin-addr" value="Bodega Central Genius, Monterrey" readonly style="background: #e2e8f0;">
+                            <label>Origen (Bodega)</label>
+                            <input type="text" id="origin-addr" value="Bodega Central Genius, Monterrey" readonly style="background: #f1f5f9;">
                         </div>
                         <div class="form-group">
-                            <label>Punto Destino (Introduce tu Dirección):</label>
+                            <label>Dirección de Destino</label>
                             <div style="display: flex; gap: 8px;">
                                 <input type="text" id="dest-addr" value="Av. Constitución 1000, Monterrey">
-                                <button type="button" class="btn btn-amarillo" style="white-space: nowrap; padding: 5px 12px; font-size: 0.85rem;" onclick="getUserLocation()">📍 Usar GPS</button>
+                                <button type="button" class="btn btn-amarillo" style="white-space: nowrap; font-size: 0.8rem;" onclick="getUserLocation()">GPS</button>
                             </div>
                         </div>
                         
-                        <p style="font-size: 0.85rem; color: #555;">Presiona en el mapa para ajustar la entrega:</p>
+                        <p style="font-size: 0.82rem; color: var(--color-secondary);">Ajuste la ubicación exacta en el mapa:</p>
                         <div id="map"></div>
-                        <p style="margin-top: 10px; font-weight: bold; color: var(--brand-blue);">Distancia aprox: <span id="dist-km">5.2</span> km | Costo Envío: <span id="dist-cost" style="color: var(--brand-orange);">$52.00</span></p>
+                        <p style="margin-top: 10px; font-weight: 600; font-size: 0.9rem; color: var(--color-dark);">Distancia: <span id="dist-km">5.2</span> km | Envío: <span id="dist-cost" style="color: var(--color-primary);">$52.00</span></p>
                     </form>
                 </div>
 
                 <div>
-                    <h3 style="color: var(--brand-blue); margin-bottom: 10px;">3. Selección de Método de Pago</h3>
+                    <h3 style="font-size: 1.05rem; margin-bottom: 12px; color: var(--color-dark);">3. Método de Pago</h3>
                     <div class="payment-methods">
-                        <button class="btn btn-amarillo" style="flex:1;" onclick="setPayment('card')">💳 Tarjeta</button>
-                        <button class="btn btn-rojo" style="flex:1;" onclick="setPayment('oxxo')">🏪 Pago OXXO</button>
+                        <button class="btn btn-azul" style="flex:1;" onclick="setPayment('card')">💳 Tarjeta</button>
+                        <button class="btn btn-amarillo" style="flex:1;" onclick="setPayment('oxxo')">🏪 OXXO Pay</button>
                     </div>
 
                     <!-- Pago Tarjeta -->
                     <div id="payment-card-box">
                         <div class="form-group">
-                            <label>Número de Tarjeta:</label>
+                            <label>Número de Tarjeta</label>
                             <input type="text" placeholder="4500 •••• •••• 8899" maxlength="16">
                         </div>
                         <div style="display: flex; gap: 10px;">
                             <div class="form-group" style="flex: 1;">
-                                <label>Expiración:</label>
+                                <label>Expiración</label>
                                 <input type="text" placeholder="MM/AA">
                             </div>
                             <div class="form-group" style="flex: 1;">
-                                <label>CVV:</label>
+                                <label>CVV</label>
                                 <input type="password" placeholder="123" maxlength="3">
                             </div>
                         </div>
@@ -620,31 +680,31 @@
 
                     <!-- Pago OXXO -->
                     <div id="payment-oxxo-box" class="oxxo-box" style="display: none;">
-                        <h4 style="color: var(--brand-orange); font-family: var(--font-principal); font-size: 1.2rem;">Ficha de Pago OXXO Pay</h4>
-                        <p style="font-size: 0.85rem; color: var(--brand-dark);">Presenta este código en caja para liquidar en efectivo.</p>
+                        <h4 style="color: var(--color-dark); font-size: 1rem; font-weight: 700;">Ficha OXXO Pay</h4>
+                        <p style="font-size: 0.82rem; color: var(--color-secondary);">Presente esta referencia en caja para realizar su pago.</p>
                         <div class="barcode">||| | |||| | ||||| |||</div>
-                        <p style="font-size: 0.85rem; font-weight: bold; color: var(--brand-blue);">8329 - 9912 - 4001 - 8829</p>
+                        <p style="font-size: 0.85rem; font-weight: 700; color: var(--color-dark);">8329 - 9912 - 4001 - 8829</p>
                     </div>
 
                     <div style="margin-top: 25px;">
-                        <button class="btn btn-rojo" style="width: 100%; font-size: 1.2rem;" onclick="confirmOrder()">Confirmar y Generar Ticket 🧾</button>
+                        <button class="btn btn-azul" style="width: 100%; padding: 12px; font-size: 1rem;" onclick="confirmOrder()">Finalizar Compra 🧾</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- INTERFAZ 4: TICKET DE CONFIRMACIÓN -->
+        <!-- INTERFAZ 4: TICKET -->
         <div id="interface-4" class="interface">
-            <h2>¡Compra Confirmada!</h2>
-            <p style="text-align: center; margin-bottom: 20px; color: var(--brand-blue);">Gracias por tu compra en Cereal Genius. Aquí tienes tu comprobante:</p>
+            <h2>Comprobante de Orden</h2>
+            <p style="text-align: center; margin-bottom: 20px; font-size: 0.9rem; color: var(--color-secondary);">Su pedido ha sido procesado exitosamente.</p>
 
             <div class="ticket" id="ticket-content">
-                <!-- Generado por JS -->
+                <!-- Dinámico -->
             </div>
 
-            <div style="text-align: center; margin-top: 25px; display: flex; justify-content: center; gap: 15px;">
-                <button class="btn btn-azul" onclick="window.print()">Imprimir Ticket 🖨️</button>
-                <button class="btn btn-amarillo" onclick="location.reload()">Nueva Compra 🔄</button>
+            <div style="text-align: center; margin-top: 25px; display: flex; justify-content: center; gap: 12px;">
+                <button class="btn btn-azul" onclick="window.print()">Imprimir Comprobante 🖨️</button>
+                <button class="btn btn-amarillo" onclick="location.reload()">Nueva Orden 🔄</button>
             </div>
         </div>
 
@@ -658,34 +718,75 @@
         function speakPromoText() {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
-                const textToSpeak = "¡Oferta mayoreo especial! Descuento directo por cada cereal al acumular 12 o más piezas, combinado entre cualquier marca.";
+                const textToSpeak = "Descuento de mayoreo automático: aplica precio preferencial por volumen al acumular 12 o más piezas en cualquier combinación de tamaños.";
                 const utterance = new SpeechSynthesisUtterance(textToSpeak);
                 utterance.lang = 'es-MX';
                 utterance.rate = 0.95;
                 window.speechSynthesis.speak(utterance);
             } else {
-                alert("Tu navegador no soporta sintetización de voz.");
+                alert("Navegador no compatible con síntesis de voz.");
             }
         }
 
         const products = [
-            { id: 'c1', barcode: '75010001', name: 'Choco Genius Crunch', size: 'Familiar (750g)', pSingle: 79.99, pPair: 149.99, pWholesale: 62.99 },
-            { id: 'c2', barcode: '75010002', name: 'Corn Flakes Power', size: 'Mediano (500g)', pSingle: 49.89, pPair: 89.99, pWholesale: 39.99 },
-            { id: 'c3', barcode: '75010003', name: 'Avena Mágica Frutal', size: 'Jumbo (1000g)', pSingle: 99.99, pPair: 179.99, pWholesale: 81.99 },
-            { id: 'c4', barcode: '75010004', name: 'Fruity Loops Genius', size: 'Individual (250g)', pSingle: 29.99, pPair: 53.99, pWholesale: 21.99 }
+            { 
+                id: 'c1', 
+                barcode: '75010001', 
+                name: 'Choco Genius Crunch', 
+                img: 'https://images.unsplash.com/photo-1521483451569-e33803c0330c?auto=format&fit=crop&w=500&q=80',
+                variants: {
+                    chico: { label: 'Chico (300g)', pSingle: 39.99, pPair: 73.99, pWholesale: 30.99 },
+                    mediano: { label: 'Mediano (550g)', pSingle: 64.99, pPair: 119.99, pWholesale: 49.99 },
+                    grande: { label: 'Grande (850g)', pSingle: 89.99, pPair: 169.99, pWholesale: 69.99 }
+                }
+            },
+            { 
+                id: 'c2', 
+                barcode: '75010002', 
+                name: 'Corn Flakes Power', 
+                img: 'https://images.unsplash.com/photo-1584473457406-6df376d1b6ae?auto=format&fit=crop&w=500&q=80',
+                variants: {
+                    chico: { label: 'Chico (250g)', pSingle: 29.99, pPair: 54.99, pWholesale: 22.99 },
+                    mediano: { label: 'Mediano (500g)', pSingle: 49.89, pPair: 89.99, pWholesale: 39.99 },
+                    grande: { label: 'Grande (750g)', pSingle: 69.99, pPair: 129.99, pWholesale: 54.99 }
+                }
+            },
+            { 
+                id: 'c3', 
+                barcode: '75010003', 
+                name: 'Avena Mágica Frutal', 
+                img: 'https://images.unsplash.com/photo-1517673400267-0251440c45dc?auto=format&fit=crop&w=500&q=80',
+                variants: {
+                    chico: { label: 'Chico (350g)', pSingle: 44.99, pPair: 82.99, pWholesale: 35.99 },
+                    mediano: { label: 'Mediano (650g)', pSingle: 74.99, pPair: 139.99, pWholesale: 59.99 },
+                    grande: { label: 'Grande (1000g)', pSingle: 99.99, pPair: 179.99, pWholesale: 81.99 }
+                }
+            },
+            { 
+                id: 'c4', 
+                barcode: '75010004', 
+                name: 'Fruity Loops Genius', 
+                img: 'https://images.unsplash.com/photo-1505252585461-04db1eb84625?auto=format&fit=crop&w=500&q=80',
+                variants: {
+                    chico: { label: 'Chico (200g)', pSingle: 25.99, pPair: 47.99, pWholesale: 19.99 },
+                    mediano: { label: 'Mediano (450g)', pSingle: 45.99, pPair: 83.99, pWholesale: 35.99 },
+                    grande: { label: 'Grande (700g)', pSingle: 65.99, pPair: 119.99, pWholesale: 51.99 }
+                }
+            }
         ];
 
         const sugerencias = [
-            { id: 's1', name: 'Leche de Soya', price: 34.99 },
-            { id: 's2', name: 'Leche Deslactosada', price: 28.50 },
-            { id: 's3', name: 'Leche de Nuez', price: 42.99 },
-            { id: 's4', name: 'Leche 100% Vaca', price: 26.99 },
-            { id: 's5', name: 'Leche de Almendras', price: 39.99 },
-            { id: 's6', name: 'Leche Sabor Plátano', price: 22.89 },
-            { id: 's7', name: 'Yoghurt Natural', price: 31.99 }
+            { id: 's1', name: 'Leche de Soya', price: 34.99, img: 'https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=300&q=80' },
+            { id: 's2', name: 'Leche Deslactosada', price: 28.50, img: 'https://images.unsplash.com/photo-1563636619-e9143da7973b?auto=format&fit=crop&w=300&q=80' },
+            { id: 's3', name: 'Leche de Nuez', price: 42.99, img: 'https://images.unsplash.com/photo-1600788886242-5c96aabe3757?auto=format&fit=crop&w=300&q=80' },
+            { id: 's4', name: 'Leche 100% Vaca', price: 26.99, img: 'https://images.unsplash.com/photo-1528750997573-59b89d66f4f7?auto=format&fit=crop&w=300&q=80' },
+            { id: 's5', name: 'Leche de Almendras', price: 39.99, img: 'https://images.unsplash.com/photo-1563636619-e9143da7973b?auto=format&fit=crop&w=300&q=80' },
+            { id: 's6', name: 'Leche Sabor Plátano', price: 22.89, img: 'https://images.unsplash.com/photo-1577805947697-89e18249d767?auto=format&fit=crop&w=300&q=80' },
+            { id: 's7', name: 'Yoghurt Natural', price: 31.99, img: 'https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=300&q=80' }
         ];
 
         let cart = {};
+        let selectedSizes = {};
         let deliveryDistance = 5.2;
         let selectedPayment = 'card';
         let isScannerActive = false;
@@ -693,6 +794,7 @@
         const originCoords = [25.6866, -100.3161];
 
         document.addEventListener("DOMContentLoaded", () => {
+            products.forEach(p => { selectedSizes[p.id] = 'mediano'; });
             renderProducts();
             renderSugerencias();
             initMap();
@@ -722,7 +824,7 @@
                 resultText.innerText = "";
             } else {
                 viewport.style.display = 'block';
-                resultText.innerText = "Apuntando cámara...";
+                resultText.innerText = "Escaneando...";
 
                 Quagga.init({
                     inputStream: {
@@ -735,7 +837,7 @@
                     }
                 }, function(err) {
                     if (err) {
-                        resultText.innerText = "Error o permisos denegados al acceder a la cámara.";
+                        resultText.innerText = "Error al acceder a la cámara.";
                         return;
                     }
                     Quagga.start();
@@ -745,9 +847,10 @@
                 Quagga.onDetected(function(result) {
                     const code = result.codeResult.code;
                     const matchedProd = products.find(p => p.barcode === code) || products[Math.floor(Math.random() * products.length)];
+                    const size = selectedSizes[matchedProd.id] || 'mediano';
                     
-                    addToCart(matchedProd.id, 1);
-                    resultText.innerText = `¡Escaneado con éxito! +1 ${matchedProd.name}`;
+                    addToCart(matchedProd.id, size, 1);
+                    resultText.innerText = `Añadido: ${matchedProd.name} (${size})`;
                     
                     setTimeout(() => {
                         toggleCameraScanner();
@@ -758,7 +861,7 @@
 
         function getUserLocation() {
             if (navigator.geolocation) {
-                document.getElementById('dest-addr').value = "Obteniendo ubicación GPS...";
+                document.getElementById('dest-addr').value = "Obteniendo GPS...";
                 navigator.geolocation.getCurrentPosition((position) => {
                     const lat = position.coords.latitude;
                     const lng = position.coords.longitude;
@@ -774,11 +877,9 @@
                     document.getElementById('dist-km').innerText = dist.toFixed(1);
                     document.getElementById('dist-cost').innerText = `$${(dist * 10).toFixed(2)}`;
                 }, () => {
-                    alert("No se pudo obtener el acceso al GPS de tu dispositivo.");
+                    alert("No se pudo obtener el acceso GPS.");
                     document.getElementById('dest-addr').value = "Av. Constitución 1000, Monterrey";
                 });
-            } else {
-                alert("Tu navegador no soporta geolocalización.");
             }
         }
 
@@ -788,9 +889,9 @@
                 attribution: '&copy; OpenStreetMap'
             }).addTo(map);
 
-            markerOrigin = L.marker(originCoords).addTo(map).bindPopup("Bodega Central Genius");
+            markerOrigin = L.marker(originCoords).addTo(map).bindPopup("Bodega Central");
             const destCoords = [25.6714, -100.3086];
-            markerDest = L.marker(destCoords, { draggable: true }).addTo(map).bindPopup("Punto de Entrega");
+            markerDest = L.marker(destCoords, { draggable: true }).addTo(map).bindPopup("Entrega");
 
             markerDest.on('dragend', function (e) {
                 const latlng = e.target.getLatLng();
@@ -809,47 +910,65 @@
             });
         }
 
+        function changeSize(productId, sizeKey) {
+            selectedSizes[productId] = sizeKey;
+            renderProducts();
+        }
+
         function renderProducts() {
             const grid = document.getElementById('products-grid');
-            grid.innerHTML = products.map(p => `
-                <div class="card">
-                    <div class="card-tag">¡Top Genius!</div>
-                    <div>
-                        <h3>${p.name}</h3>
-                        <span class="size-badge">Tamaño: ${p.size}</span>
-                        
-                        <div class="price-list">
-                            <div class="price-item"><span>1 Pieza:</span> <strong>$${p.pSingle.toFixed(2)}</strong></div>
-                            <div class="price-item"><span>Par (2 pcs):</span> <strong>$${p.pPair.toFixed(2)}</strong></div>
-                            <div class="price-item highlight"><span>Mayoreo (>12 tot):</span> <strong>$${p.pWholesale.toFixed(2)}</strong></div>
-                        </div>
-                    </div>
+            grid.innerHTML = products.map(p => {
+                const currentSizeKey = selectedSizes[p.id] || 'mediano';
+                const variant = p.variants[currentSizeKey];
 
-                    <div>
-                        <div class="add-controls">
-                            <button class="btn btn-azul" style="flex:1;" onclick="addToCart('${p.id}', 1)">+1 Pza</button>
-                            <button class="btn btn-amarillo" style="flex:1;" onclick="addToCart('${p.id}', 2)">+1 Par</button>
-                            <button class="btn btn-rojo" style="flex:1;" onclick="addToCart('${p.id}', 12)">+12 (Mayoreo)</button>
+                return `
+                    <div class="card">
+                        <div>
+                            <img src="${p.img}" alt="${p.name}" class="product-img">
+                            <h3>${p.name}</h3>
+                            
+                            <label class="size-select-label">Seleccionar Tamaño:</label>
+                            <select class="size-select" onchange="changeSize('${p.id}', this.value)">
+                                <option value="chico" ${currentSizeKey === 'chico' ? 'selected' : ''}>Chico - ${p.variants.chico.label.split(' ')[1]}</option>
+                                <option value="mediano" ${currentSizeKey === 'mediano' ? 'selected' : ''}>Mediano - ${p.variants.mediano.label.split(' ')[1]}</option>
+                                <option value="grande" ${currentSizeKey === 'grande' ? 'selected' : ''}>Grande - ${p.variants.grande.label.split(' ')[1]}</option>
+                            </select>
+
+                            <div class="price-list">
+                                <div class="price-item"><span>1 Unidad:</span> <strong>$${variant.pSingle.toFixed(2)}</strong></div>
+                                <div class="price-item"><span>Par (2 pcs):</span> <strong>$${variant.pPair.toFixed(2)}</strong></div>
+                                <div class="price-item highlight"><span>Mayoreo (>12 pcs):</span> <strong>$${variant.pWholesale.toFixed(2)}</strong></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="add-controls">
+                                <button class="btn btn-qty-soft-blue" style="flex:1;" onclick="addToCart('${p.id}', '${currentSizeKey}', 1)">+1</button>
+                                <button class="btn btn-amarillo" style="flex:1;" onclick="addToCart('${p.id}', '${currentSizeKey}', 2)">+2</button>
+                                <button class="btn btn-qty-soft-amber" style="flex:1;" onclick="addToCart('${p.id}', '${currentSizeKey}', 12)">+12</button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
         function renderSugerencias() {
             const grid = document.getElementById('sugerencias-grid');
             grid.innerHTML = sugerencias.map(s => `
-                <div style="border: 2px solid var(--brand-dark); padding: 12px; border-radius: 8px; background: #fff; text-align: center; box-shadow: 2px 2px 0 var(--brand-dark);">
-                    <strong style="display:block; font-size: 0.95rem; color: var(--brand-blue);">${s.name}</strong>
-                    <span style="color: var(--brand-orange); font-weight: bold; font-size: 1.05rem;">$${s.price.toFixed(2)}</span>
-                    <button class="btn btn-amarillo" style="padding: 6px 8px; font-size: 0.8rem; margin-top: 6px; width: 100%;" onclick="addSugerenciaToCart('${s.id}')">+ Agregar</button>
+                <div style="border: 1px solid var(--color-border); padding: 10px; border-radius: 6px; background: #fff; text-align: center;">
+                    <img src="${s.img}" alt="${s.name}" class="sug-img">
+                    <strong style="display:block; font-size: 0.85rem; color: var(--color-dark);">${s.name}</strong>
+                    <span style="color: var(--color-primary); font-weight: 700; font-size: 0.9rem;">$${s.price.toFixed(2)}</span>
+                    <button class="btn btn-amarillo" style="padding: 5px 8px; font-size: 0.78rem; margin-top: 6px; width: 100%;" onclick="addSugerenciaToCart('${s.id}')">+ Agregar</button>
                 </div>
             `).join('');
         }
 
-        function addToCart(productId, qty) {
-            if (!cart[productId]) cart[productId] = 0;
-            cart[productId] += qty;
+        function addToCart(productId, sizeKey, qty) {
+            const itemKey = `${productId}_${sizeKey}`;
+            if (!cart[itemKey]) cart[itemKey] = 0;
+            cart[itemKey] += qty;
             updateCartUI();
         }
 
@@ -864,32 +983,39 @@
             let totalCerealUnits = 0;
             let normalSubtotal = 0;
 
-            products.forEach(p => {
-                if (cart[p.id]) {
-                    totalCerealUnits += cart[p.id];
+            for (let key in cart) {
+                if (key.startsWith('c')) {
+                    totalCerealUnits += cart[key];
                 }
-            });
+            }
 
             const isWholesaleQualified = totalCerealUnits >= 12;
 
-            for (let id in cart) {
-                const qty = cart[id];
-                const product = products.find(p => p.id === id);
-                const sug = sugerencias.find(s => s.id === id);
+            for (let key in cart) {
+                const qty = cart[key];
+                if (qty <= 0) continue;
 
-                if (product) {
-                    normalSubtotal += product.pSingle * qty;
+                if (key.startsWith('c')) {
+                    const [prodId, sizeKey] = key.split('_');
+                    const product = products.find(p => p.id === prodId);
+                    if (!product) continue;
+                    
+                    const variant = product.variants[sizeKey];
+                    normalSubtotal += variant.pSingle * qty;
 
                     if (isWholesaleQualified) {
-                        subtotalRaw += product.pWholesale * qty;
+                        subtotalRaw += variant.pWholesale * qty;
                     } else {
                         const pairs = Math.floor(qty / 2);
                         const singles = qty % 2;
-                        subtotalRaw += (pairs * product.pPair) + (singles * product.pSingle);
+                        subtotalRaw += (pairs * variant.pPair) + (singles * variant.pSingle);
                     }
-                } else if (sug) {
-                    normalSubtotal += sug.price * qty;
-                    subtotalRaw += sug.price * qty;
+                } else {
+                    const sug = sugerencias.find(s => s.id === key);
+                    if (sug) {
+                        normalSubtotal += sug.price * qty;
+                        subtotalRaw += sug.price * qty;
+                    }
                 }
             }
 
@@ -907,33 +1033,43 @@
             let hasItems = false;
             const totals = calculateTotals();
 
-            for (let id in cart) {
-                const qty = cart[id];
+            for (let key in cart) {
+                const qty = cart[key];
                 if (qty <= 0) continue;
                 hasItems = true;
 
-                const product = products.find(p => p.id === id);
-                const sug = sugerencias.find(s => s.id === id);
+                let name = '', priceUnit = 0, subtotal = 0, img = '';
 
-                let name = '', priceUnit = 0, subtotal = 0;
+                if (key.startsWith('c')) {
+                    const [prodId, sizeKey] = key.split('_');
+                    const product = products.find(p => p.id === prodId);
+                    if (!product) continue;
 
-                if (product) {
-                    name = product.name;
+                    const variant = product.variants[sizeKey];
+                    name = `${product.name} (${variant.label})`;
+                    img = product.img;
+
                     if (totals.isWholesaleQualified) {
-                        priceUnit = product.pWholesale;
+                        priceUnit = variant.pWholesale;
                     } else {
-                        priceUnit = qty >= 2 ? (product.pPair / 2) : product.pSingle;
+                        priceUnit = qty >= 2 ? (variant.pPair / 2) : variant.pSingle;
                     }
                     subtotal = priceUnit * qty;
-                } else if (sug) {
+                } else {
+                    const sug = sugerencias.find(s => s.id === key);
+                    if (!sug) continue;
                     name = sug.name;
+                    img = sug.img;
                     priceUnit = sug.price;
                     subtotal = priceUnit * qty;
                 }
 
                 tbody.innerHTML += `
-                    <tr style="border-bottom: 1px solid #e2e8f0;">
-                        <td style="padding: 10px;"><strong>${name}</strong></td>
+                    <tr style="border-bottom: 1px solid var(--color-border); font-size: 0.9rem;">
+                        <td style="padding: 10px;">
+                            <img src="${img}" alt="${name}" class="cart-img-thumb">
+                            <strong>${name}</strong>
+                        </td>
                         <td style="padding: 10px;">${qty}</td>
                         <td style="padding: 10px;">$${priceUnit.toFixed(2)}</td>
                         <td style="padding: 10px;">$${subtotal.toFixed(2)}</td>
@@ -942,13 +1078,13 @@
             }
 
             if (!hasItems) {
-                tbody.innerHTML = `<tr><td colspan="4" style="padding: 15px; text-align: center; color: #666;">El carrito está vacío</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="4" style="padding: 15px; text-align: center; color: var(--color-secondary);">El carrito está vacío</td></tr>`;
             }
 
             document.getElementById('summary-subtotal').innerText = `$${totals.subtotalRaw.toFixed(2)}`;
             document.getElementById('summary-iva').innerText = `$${totals.iva.toFixed(2)}`;
             document.getElementById('summary-total').innerText = `$${totals.total.toFixed(2)}`;
-            document.getElementById('savings-box').innerText = `¡Ahorro total en esta compra: $${totals.savings.toFixed(2)}!`;
+            document.getElementById('savings-box').innerText = `Ahorro total estimado: $${totals.savings.toFixed(2)}`;
         }
 
         function setPayment(type) {
@@ -971,38 +1107,45 @@
             const dest = document.getElementById('dest-addr').value;
 
             let itemsSummaryHTML = '';
-            for (let id in cart) {
-                if (cart[id] <= 0) continue;
-                const product = products.find(p => p.id === id);
-                const sug = sugerencias.find(s => s.id === id);
-                const item = product || sug;
+            for (let key in cart) {
+                if (cart[key] <= 0) continue;
+                let itemName = '';
+
+                if (key.startsWith('c')) {
+                    const [prodId, sizeKey] = key.split('_');
+                    const product = products.find(p => p.id === prodId);
+                    if (product) itemName = `${product.name} (${product.variants[sizeKey].label})`;
+                } else {
+                    const sug = sugerencias.find(s => s.id === key);
+                    if (sug) itemName = sug.name;
+                }
+
                 itemsSummaryHTML += `
                     <div class="ticket-line">
-                        <span>${cart[id]}x ${item.name}</span>
+                        <span>${cart[key]}x ${itemName}</span>
                     </div>
                 `;
             }
 
             document.getElementById('ticket-content').innerHTML = `
-                <h3>CEREAL GENIUS</h3>
-                <p style="text-align:center; font-size:0.8rem; color:#555;">Ticket de Venta #CG-${Math.floor(Math.random()*899999+100000)}</p>
+                <h3>CerealGenius</h3>
+                <p style="text-align:center; font-size:0.78rem; color:#64748b;">Orden #${Math.floor(Math.random()*899999+100000)}</p>
                 <div class="ticket-divider"></div>
                 <p><strong>Cliente:</strong> ${email}</p>
-                <p><strong>Tel:</strong> ${phone}</p>
+                <p><strong>Teléfono:</strong> ${phone}</p>
                 <p><strong>Destino:</strong> ${dest}</p>
                 <div class="ticket-divider"></div>
                 ${itemsSummaryHTML}
                 <div class="ticket-divider"></div>
-                <div class="ticket-line"><span>Subtotal Prod:</span> <span>$${totals.subtotalRaw.toFixed(2)}</span></div>
+                <div class="ticket-line"><span>Subtotal:</span> <span>$${totals.subtotalRaw.toFixed(2)}</span></div>
                 <div class="ticket-line"><span>IVA (16%):</span> <span>$${totals.iva.toFixed(2)}</span></div>
                 <div class="ticket-line"><span>Envío (${deliveryDistance.toFixed(1)} km):</span> <span>$${shippingCost.toFixed(2)}</span></div>
                 <div class="ticket-divider"></div>
-                <div class="ticket-line" style="font-size:1.2rem; font-weight:bold; color: var(--brand-blue);">
-                    <span>TOTAL:</span> <span>$${grandTotal.toFixed(2)}</span>
+                <div class="ticket-line" style="font-size:1.1rem; font-weight:bold; color: var(--color-dark);">
+                    <span>Total Pagado:</span> <span>$${grandTotal.toFixed(2)}</span>
                 </div>
                 <div class="ticket-divider"></div>
-                <p style="text-align:center;"><strong>Método de Pago:</strong> ${selectedPayment === 'card' ? 'Tarjeta de Crédito/Débito' : 'Efectivo en OXXO'}</p>
-                <p style="text-align:center; margin-top:10px; font-size:0.8rem;">¡Gracias por preferir Cereal Genius!</p>
+                <p style="text-align:center; font-size:0.85rem;"><strong>Método de Pago:</strong> ${selectedPayment === 'card' ? 'Tarjeta' : 'OXXO Pay'}</p>
             `;
 
             showInterface(4);
